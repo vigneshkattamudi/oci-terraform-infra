@@ -2,7 +2,7 @@ tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaaliearqd2xqtld66ub5bxn24dkeangasir
 compartment_ocid = "ocid1.compartment.oc1..aaaaaaaai6ufsuuy7u2axdnip2swa5xfiob75dggvuikwgahajpo6yjcoota"
 user_ocid        = "ocid1.user.oc1..aaaaaaaaqwhixay7327ihqo44z6eb6gf72uhs4p4k7dthkjgkb5lolruk57a"
 fingerprint      = "58:96:86:99:71:3a:d6:00:18:dc:8a:67:6d:a7:46:22"
-private_key_path = "/c/Users/vkatt/.oci/oci_api_key.pem"
+private_key = file("/c/Users/vkatt/.oci/oci_api_key.pem")
 region           = "uk-london-1"
 ssh_public_key       = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCkZMypK88d3gmQjfgGQQl4L+NHrjqgdhwQ2tM581euQLfHs/qdzIi4DLWwK3x4lrmZYjx2MBwonZR4ykymtT7gvqfD08fsTCyKJlAtvpwAPJBKm+Jc2RUhrBFyNCTzM5bIaWjDFvEooeE0svlGr+f0QI0s1n40+QLOwtQszPOgReYTYr2c09qP/oGuJHo6pvC1EZ7vjW22+ktstAsM/4gq4Z2/FoDA+2WZDNUSxMI7X1JMvzH6fnshSSfVF2yVE99+G/ynhwG8fEIOhkcrQZkRzWpwNvCNTCzyRg7h3tyoxbH+ktYKQTrqZDqhau55EL7n0kPqG7XjZjUCUkMpiMAbsYz5PGtRCj+Et1hBW477ZgbqRhO2aLvO1X5RA+hliEi7YgX6e0U/fChDWqkWzMp8f92M8nandzgkzNb37APkGKSAQ2zY3hPdlGif/2nQeI98DYC6mgrLsUUpKolwFPBHsI8EiAgwXo6eNgEzFMpogYTCGdMvrGM2IuNVq1ppvxu+Yd7DiHpUTn7h5PoqxUp7VmlB2IJMYJmkL/WL6VLQsMacRD7JC4k8plcO202fqkuiTlITFUinha5bPgcG7DWAdf9NgvnQYsWiwgqw7DLvb6oq/ogOX5odPkCjvw4dHeZyCNcOMTTr9QF/eh3GlMFrZrmZoG6dgBrpfADZpIZtfw== vkatt@LAPTOP-JH7KVNLC"
 availability_domain  = "fGJS:UK-LONDON-1-AD-1"
