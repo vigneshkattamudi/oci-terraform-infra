@@ -8,7 +8,6 @@ resource "oci_core_internet_gateway" "igw" {
   compartment_id = var.compartment_ocid
   display_name = "IGW"
   vcn_id = oci_core_virtual_network.vcn.id
-  is_enabled = true
 }
 
 resource "oci_core_route_table" "rt" {
@@ -87,5 +86,4 @@ resource "oci_objectstorage_bucket" "my_bucket" {
   name           = "my-terraform-bucket"
   namespace      = data.oci_objectstorage_namespace.ns.namespace
   storage_tier   = "Standard"
-  public_access_type = "NoPublicAccess"
 }
