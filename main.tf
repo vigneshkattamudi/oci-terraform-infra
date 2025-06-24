@@ -1,46 +1,39 @@
-provider "oci" {
-  region = var.region
-}
-
 resource "oci_core_virtual_network" "vcn" {
-  cidr_block     = "10.0.0.0/16"
+  cidr_block = "10.0.0.0/16"
+  display_name = "my-vcn"
   compartment_id = var.compartment_ocid
-  display_name   = "tf-vcn"
 }
 
 resource "oci_core_internet_gateway" "igw" {
   compartment_id = var.compartment_ocid
-  vcn_id         = oci_core_virtual_network.vcn.id
-  display_name   = "tf-igw"
-  is_enabled     = true
+  display_name = "IGW"
+  vcn_id = oci_core_virtual_network.vcn.id
+  is_enabled = true
 }
 
-resource "oci_core_route_table" "route_table" {
+resource "oci_core_route_table" "rt" {
   compartment_id = var.compartment_ocid
   vcn_id         = oci_core_virtual_network.vcn.id
-  display_name   = "tf-rt"
-
+  display_name   = "route-table"
   route_rules {
-    cidr_block        = "0.0.0.0/0"
+    destination       = "0.0.0.0/0"
+    destination_type  = "CIDR_BLOCK"
     network_entity_id = oci_core_internet_gateway.igw.id
   }
 }
 
-resource "oci_core_security_list" "ssh_list" {
+resource "oci_core_security_list" "sec_list" {
   compartment_id = var.compartment_ocid
   vcn_id         = oci_core_virtual_network.vcn.id
-  display_name   = "tf-ssh-sl"
-
+  display_name   = "allow-ssh"
   ingress_security_rules {
-    protocol = "6" # TCP
+    protocol = "6"
     source   = "0.0.0.0/0"
-
     tcp_options {
       min = 22
       max = 22
     }
   }
-
   egress_security_rules {
     protocol    = "all"
     destination = "0.0.0.0/0"
@@ -48,39 +41,51 @@ resource "oci_core_security_list" "ssh_list" {
 }
 
 resource "oci_core_subnet" "public_subnet" {
-  compartment_id       = var.compartment_ocid
-  vcn_id               = oci_core_virtual_network.vcn.id
-  cidr_block           = "10.0.1.0/24"
-  display_name         = "tf-public-subnet"
-  route_table_id       = oci_core_route_table.route_table.id
-  security_list_ids    = [oci_core_security_list.ssh_list.id]
+  cidr_block              = "10.0.1.0/24"
+  display_name            = "public-subnet"
+  vcn_id                  = oci_core_virtual_network.vcn.id
+  compartment_id          = var.compartment_ocid
+  availability_domain     = var.availability_domain
+  route_table_id          = oci_core_route_table.rt.id
+  security_list_ids       = [oci_core_security_list.sec_list.id]
   prohibit_public_ip_on_vnic = false
 }
 
-resource "oci_core_instance" "vm" {
-  availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
-  compartment_id      = var.compartment_ocid
-  shape               = "VM.Standard.E2.1.Micro"
-  display_name        = "tf-instance"
-  subnet_id           = oci_core_subnet.public_subnet.id
-  source_details {
-    source_type = "image"
-    source_id   = data.oci_core_images.linux_image.images[0].id
-  }
-
-  metadata = {
-    ssh_authorized_keys = file("~/.ssh/id_rsa.pub")
-  }
-}
-
-data "oci_identity_availability_domains" "ads" {
-  compartment_id = var.tenancy_ocid
-}
-
-data "oci_core_images" "linux_image" {
+data "oci_core_images" "oracle_linux" {
   compartment_id = var.compartment_ocid
   operating_system = "Oracle Linux"
   operating_system_version = "8"
-  sort_by = "TIMECREATED"
-  sort_order = "DESC"
+  shape = "VM.Standard.E2.1.Micro"
+}
+
+resource "oci_core_instance" "vm" {
+  availability_domain = var.availability_domain
+  compartment_id      = var.compartment_ocid
+  shape               = "VM.Standard.E2.1.Micro"
+
+  source_details {
+    source_type = "image"
+    source_id   = data.oci_core_images.oracle_linux.images[0].id
+  }
+
+  create_vnic_details {
+    subnet_id        = oci_core_subnet.public_subnet.id
+    assign_public_ip = true
+  }
+
+  metadata = {
+    ssh_authorized_keys = var.ssh_public_key
+  }
+
+  display_name = "my-instance"
+}
+
+data "oci_objectstorage_namespace" "ns" {}
+
+resource "oci_objectstorage_bucket" "my_bucket" {
+  compartment_id = var.compartment_ocid
+  name           = "my-terraform-bucket"
+  namespace      = data.oci_objectstorage_namespace.ns.namespace
+  storage_tier   = "Standard"
+  public_access_type = "NoPublicAccess"
 }
