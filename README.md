@@ -119,17 +119,3 @@ terraform destroy
 ```
 
 ---
-
-## 🧾 License
-
-MIT License
-
----
-
-## 🙋‍♂️ Support
-
-For issues, open a GitHub [Issue](https://github.com/vigneshkattamudi/oci-terraform-infra/issues).
-
-````
-
----
