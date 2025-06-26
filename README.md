@@ -17,14 +17,18 @@ This repository contains Terraform configuration files to automate the provision
 
 ## 📁 Project Structure
 
+```
+
 oci-terraform-infra/
-├── main.tf # Root module, includes all other configs
-├── compute_instance.tf # Compute instance definition
-├── provider.tf # OCI provider block
-├── variables.tf # Input variables
-├── output.tf # Outputs to display after apply
-├── vcn.tf # Networking components (VCN, subnet, gateway)
-└── terraform.tfvars # (Optional) Your custom variable values
+├── main.tf                 # Root module, includes all other configs
+├── compute\_instance.tf     # Compute instance definition
+├── provider.tf             # OCI provider block
+├── variables.tf            # Input variables
+├── output.tf               # Outputs to display after apply
+├── vcn.tf                  # Networking components (VCN, subnet, gateway)
+└── terraform.tfvars        # (Optional) Your custom variable values
+
+````
 
 ---
 
@@ -38,17 +42,22 @@ oci-terraform-infra/
   - Required IAM policies
 - SSH key pair (for instance login)
 
-### 1. Clone the Repository
+---
+
+### 🧰 1. Clone the Repository
 
 ```bash
 git clone https://github.com/vigneshkattamudi/oci-terraform-infra.git
 cd oci-terraform-infra
-2. Set Variables
-Create a terraform.tfvars file:
+````
 
-hcl
-Copy
-Edit
+---
+
+### ⚙️ 2. Set Variables
+
+Create a `terraform.tfvars` file in the root directory:
+
+```hcl
 tenancy_ocid        = "ocid1.tenancy.oc1..example"
 user_ocid           = "ocid1.user.oc1..example"
 fingerprint         = "12:34:56:78:90:ab:cd:ef:gh:ij"
@@ -56,42 +65,83 @@ private_key_path    = "~/.oci/oci_api_key.pem"
 compartment_ocid    = "ocid1.compartment.oc1..example"
 availability_domain = "UK-LONDON-1-AD-1"
 ssh_public_key      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQ..."
-3. Initialize Terraform
-bash
-Copy
-Edit
+```
+
+---
+
+### 🔧 3. Initialize Terraform
+
+```bash
 terraform init
-4. Apply the Configuration
-bash
-Copy
-Edit
+```
+
+---
+
+### 🚀 4. Apply the Configuration
+
+```bash
 terraform apply
+```
+
+---
+
 ### 🔐 SSH Access
+
 Once deployed, connect to your compute instance:
 
-bash
-Copy
-Edit
+```bash
 ssh -i sshoci_key.pem opc@<public_ip>
-🔒 Ensure your SSH private key has the correct permissions:
+```
 
-bash
-Copy
-Edit
+Ensure your SSH private key has the correct permissions:
+
+```bash
 chmod 400 sshoci_key.pem
-📤 Outputs
+```
+
+---
+
+## 📤 Outputs
+
 After applying, Terraform will output:
 
-Public IP
+* ✅ Public IP
+* ✅ Private IP
+* ✅ Instance OCID
+* ✅ Subnet OCID
 
-Private IP
+---
 
-Instance OCID
+## 🧹 Destroy Resources
 
-Subnet OCID
-
-🧹 Destroy Resources
-bash
-Copy
-Edit
+```bash
 terraform destroy
+```
+
+---
+
+## 🧾 License
+
+MIT License
+
+---
+
+## 🙋‍♂️ Support
+
+For issues, open a GitHub [Issue](https://github.com/vigneshkattamudi/oci-terraform-infra/issues).
+
+````
+
+---
+
+### ✅ What to Do Now
+
+1. Replace your existing `README.md` file with this content in VS Code.
+2. Save and commit the file.
+3. Push to GitHub.
+
+```bash
+git add README.md
+git commit -m "Fix: Cleaned up README formatting"
+git push origin main
+````
