@@ -96,7 +96,7 @@ ssh -i sshoci_key.pem opc@<public_ip>
 Ensure your SSH private key has the correct permissions:
 
 ```bash
-chmod 400 sshoci_key.pem
+chmod 600 sshoci_key.pem
 ```
 
 ---
