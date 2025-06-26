@@ -133,15 +133,3 @@ For issues, open a GitHub [Issue](https://github.com/vigneshkattamudi/oci-terraf
 ````
 
 ---
-
-### ✅ What to Do Now
-
-1. Replace your existing `README.md` file with this content in VS Code.
-2. Save and commit the file.
-3. Push to GitHub.
-
-```bash
-git add README.md
-git commit -m "Fix: Cleaned up README formatting"
-git push origin main
-````
