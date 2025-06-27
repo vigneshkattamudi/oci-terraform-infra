@@ -6,3 +6,4 @@ variable "compartment_ocid" {}
 variable "private_key_path" {}
 variable "ssh_public_key" {}
 variable "availability_domain" {}
+variable "image_id" {}
