@@ -1,17 +1,25 @@
+Here’s the full **Markdown README.md** file formatted exactly for your OCI Terraform infra repo with modules:
+
+```markdown
 # ☁️ OCI Terraform Infrastructure
 
-This repository contains Terraform configuration files to automate the provisioning of infrastructure on **Oracle Cloud Infrastructure (OCI)**. It supports setting up core networking resources and launching compute instances using your chosen image and configuration.
+This repository contains **modular Terraform configurations** to provision Oracle Cloud Infrastructure (OCI) resources in a flexible, reusable way. It leverages Terraform modules to manage core networking components, compute instances, storage, and security resources efficiently.
 
 ---
 
 ## 📦 Features
 
-- ✅ Creates a Virtual Cloud Network (VCN)
-- ✅ Configures Internet Gateway and Route Tables
-- ✅ Creates public subnet(s)
-- ✅ Launches a Compute instance (Oracle Linux or Ubuntu)
-- ✅ Attaches SSH key for secure access
-- ✅ Exposes outputs for public/private IPs and instance OCID
+- Modular design for easy customization and reuse  
+- Creates Virtual Cloud Network (VCN) and related networking components:  
+  - Internet Gateway  
+  - NAT Gateway  
+  - Public and Private Subnets  
+  - Route Tables and Security Lists  
+- Launches compute instances including:  
+  - Bastion host for secure SSH access  
+  - Private compute instances  
+- Creates Object Storage buckets  
+- Outputs key resource IDs and IPs for integration and verification  
 
 ---
 
@@ -19,57 +27,57 @@ This repository contains Terraform configuration files to automate the provision
 
 ```
 
-oci-terraform-project/
+oci-terraform-infra/
 │
-├── main.tf
-├── variables.tf
-├── outputs.tf
-├── terraform.tfvars
-├── provider.tf
-├── README.md
+├── main.tf                # Root configuration that calls modules and sets inputs
+├── variables.tf           # Root variables definition
+├── outputs.tf             # Root outputs aggregation
+├── terraform.tfvars       # User-specific variable values (excluded from VCS)
+├── provider.tf            # Provider setup (OCI)
+├── README.md              # This documentation
 │
-├── modules/
-│   ├── vcn/
+├── modules/               # Reusable modules for individual OCI resources
+│   ├── bastion\_instance/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   └── outputs.tf
 │   │
-│   ├── internet_gateway/
+│   ├── internet\_gateway/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   └── outputs.tf
 │   │
-│   ├── security_list/
+│   ├── nat\_gateway/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   └── outputs.tf
 │   │
-│   ├── public_subnet/
+│   ├── object\_storage/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   └── outputs.tf
 │   │
-│   ├── nat_gateway/
+│   ├── private\_instance/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   └── outputs.tf
 │   │
-│   ├── private_subnet/
+│   ├── private\_subnet/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   └── outputs.tf
 │   │
-│   ├── bastion_instance/
+│   ├── public\_subnet/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   └── outputs.tf
 │   │
-│   ├── private_instance/
+│   ├── security\_list/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   └── outputs.tf
 │   │
-│   └── object_storage/
+│   └── vcn/
 │       ├── main.tf
 │       ├── variables.tf
 │       └── outputs.tf
@@ -82,15 +90,13 @@ oci-terraform-project/
 
 ### Prerequisites
 
-- Terraform v1.0+
-- OCI Account with:
-  - API key configured
-  - Required IAM policies
-- SSH key pair (for instance login)
+- Terraform v1.0+  
+- OCI account with API key and necessary IAM permissions  
+- SSH key pair for instance access  
 
 ---
 
-### 🧰 1. Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/vigneshkattamudi/oci-terraform-infra.git
@@ -99,9 +105,9 @@ cd oci-terraform-infra
 
 ---
 
-### ⚙️ 2. Set Variables
+### 2. Configure Variables
 
-Create a `terraform.tfvars` file in the root directory:
+Create a `terraform.tfvars` file in the root directory with your OCI environment details:
 
 ```hcl
 tenancy_ocid        = "ocid1.tenancy.oc1..example"
@@ -111,11 +117,15 @@ private_key_path    = "~/.oci/oci_api_key.pem"
 compartment_ocid    = "ocid1.compartment.oc1..example"
 availability_domain = "UK-LONDON-1-AD-1"
 ssh_public_key      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQ..."
+cidr_block          = "10.0.0.0/16"
+display_name        = "my-vcn"
 ```
+
+*Modify or add variables depending on your requirements.*
 
 ---
 
-### 🔧 3. Initialize Terraform
+### 3. Initialize Terraform
 
 ```bash
 terraform init
@@ -123,7 +133,15 @@ terraform init
 
 ---
 
-### 🚀 4. Apply the Configuration
+### 4. Plan & Apply
+
+To see what Terraform will do:
+
+```bash
+terraform plan
+```
+
+To create resources:
 
 ```bash
 terraform apply
@@ -131,37 +149,54 @@ terraform apply
 
 ---
 
-### 🔐 SSH Access
+## 📦 Using Modules
 
-Once deployed, connect to your compute instance:
+Each module manages a specific resource or group of resources. The root `main.tf` calls these modules with inputs defined via variables. You can customize or reuse modules in other projects by copying the relevant folder under `modules/`.
 
-```bash
-ssh -i sshoci_key.pem opc@<public_ip>
+Example of module usage in `main.tf`:
+
+```hcl
+module "vcn" {
+  source          = "./modules/vcn"
+  cidr_block      = var.cidr_block
+  compartment_id  = var.compartment_ocid
+  display_name    = var.display_name
+}
+
+module "internet_gateway" {
+  source         = "./modules/internet_gateway"
+  vcn_id         = module.vcn.vcn_id
+  compartment_id = var.compartment_ocid
+  display_name   = "my-internet-gateway"
+}
 ```
 
-Ensure your SSH private key has the correct permissions:
+---
+
+## 🔐 SSH Access
+
+After the compute instances and bastion host are created, connect using:
 
 ```bash
-chmod 600 sshoci_key.pem
+ssh -i <path_to_private_key> opc@<public_ip>
 ```
 
 ---
 
 ## 📤 Outputs
 
-After applying, Terraform will output:
+Terraform will output useful details such as:
 
-* ✅ Public IP
-* ✅ Private IP
-* ✅ Instance OCID
-* ✅ Subnet OCID
+* Public and Private IP addresses
+* Instance OCIDs
+* Subnet OCIDs
 
 ---
 
-## 🧹 Destroy Resources
+## 🧹 Cleanup
+
+To delete all created resources:
 
 ```bash
 terraform destroy
 ```
-
----
