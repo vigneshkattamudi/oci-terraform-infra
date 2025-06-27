@@ -1,6 +1,3 @@
-Here’s the full **Markdown README.md** file formatted exactly for your OCI Terraform infra repo with modules:
-
-```markdown
 # ☁️ OCI Terraform Infrastructure
 
 This repository contains **modular Terraform configurations** to provision Oracle Cloud Infrastructure (OCI) resources in a flexible, reusable way. It leverages Terraform modules to manage core networking components, compute instances, storage, and security resources efficiently.
