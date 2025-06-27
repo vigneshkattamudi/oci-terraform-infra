@@ -19,14 +19,60 @@ This repository contains Terraform configuration files to automate the provision
 
 ```
 
-oci-terraform-infra/
-├── main.tf                 # Root module, includes all other configs
-├── compute\_instance.tf     # Compute instance definition
-├── provider.tf             # OCI provider block
-├── variables.tf            # Input variables
-├── output.tf               # Outputs to display after apply
-├── vcn.tf                  # Networking components (VCN, subnet, gateway)
-└── terraform.tfvars        # (Optional) Your custom variable values
+oci-terraform-project/
+│
+├── main.tf
+├── variables.tf
+├── outputs.tf
+├── terraform.tfvars
+├── provider.tf
+├── README.md
+│
+├── modules/
+│   ├── vcn/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   ├── internet_gateway/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   ├── security_list/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   ├── public_subnet/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   ├── nat_gateway/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   ├── private_subnet/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   ├── bastion_instance/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   ├── private_instance/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
+│   └── object_storage/
+│       ├── main.tf
+│       ├── variables.tf
+│       └── outputs.tf
 
 ````
 
