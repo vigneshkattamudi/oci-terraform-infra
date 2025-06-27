@@ -1,7 +1,7 @@
-resource "oci_core_instance" "test" {
+resource "oci_core_instance" "bastion" {
   availability_domain = var.availability_domain
   compartment_id      = var.compartment_ocid
-  display_name        = "oracle-linux-9-instance"
+  display_name        = "bastion-instance"
   shape               = "VM.Standard.E5.Flex"
   shape_config {
     ocpus = 1

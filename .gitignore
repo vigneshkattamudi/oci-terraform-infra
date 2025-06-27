@@ -1,6 +1,11 @@
 # Ignore Terraform local files
 .terraform/
 .terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
+*.tfplan
+*.tfvars.json
+
 
 # Ignore secrets
 *.tfvars

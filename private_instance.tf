@@ -1,4 +1,4 @@
-resource "oci_core_instance" "test" {
+resource "oci_core_instance" "private_instance" {
   availability_domain = var.availability_domain
   compartment_id      = var.compartment_ocid
   display_name        = "oracle-linux-9-instance"
@@ -14,8 +14,8 @@ resource "oci_core_instance" "test" {
   }
 
   create_vnic_details {
-    subnet_id        = oci_core_subnet.public_subnet.id
-    assign_public_ip = true
+    subnet_id        = oci_core_subnet.private_subnet.id
+    assign_public_ip = false
   }
 
   metadata = {
