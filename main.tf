@@ -81,3 +81,28 @@ module "object_storage" {
   compartment_id = var.compartment_ocid
   bucket_name   = "my-terraform-bucket-demo"
 }
+
+module "autonomous_database" {
+  source = "./modules/autonomous_database_serverless"
+
+  compartment_ocid = var.compartment_ocid
+  region                    = var.region
+  db_name                   = "DEVADB"
+  display_name              = "Dev Autonomous DB"
+  admin_password            = var.adb_admin_password
+  cpu_core_count            = 2
+  data_storage_tbs          = 1
+  # auto_scaling              = true
+  license_model             = "LICENSE_INCLUDED"
+
+  # defined_tags              = {}                          # e.g. {}
+  cpu_alarm_threshold       = 80
+  # nsg_ids                   = []                          # List of Network Security Group OCIDs
+  ons_topic_id              = var.ons_topic_id
+  # elastic_pool_id           = ""                          # Optional: elastic pool OCID
+
+  freeform_tags = {
+    Project = "OCI‑Terraform‑Infra"
+    Env     = "dev"
+  }
+}
